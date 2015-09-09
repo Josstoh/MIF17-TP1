@@ -243,8 +243,10 @@ public class SimpleLogo extends JFrame implements ActionListener {
             t2.setPosition(500/2 - 200 , 400/2 + 150);
             TortueAmelioree t3 = new TortueAmelioree("Donatello");
             t3.setPosition(500/2 -200 , 400/2 + 100);
-            TortueAmelioree t4 = new TortueAmelioree("Donatello");
+            TortueAmelioree t4 = new TortueAmelioree();
             t4.setPosition(500/2 - 200, 400/2 + 50);
+            
+            
             
             t1.ajouterCopine(t2);
             t1.ajouterCopine(t3);
