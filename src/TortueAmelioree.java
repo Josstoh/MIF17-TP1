@@ -2,6 +2,8 @@
 import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
 import java.util.HashSet;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,7 +15,7 @@ import java.util.HashSet;
  *
  * @author p1203723
  */
-public class TortueAmelioree extends Tortue {
+public class TortueAmelioree extends Tortue{
     private static int nb_tortue_cree = 0;
     
     private String nom;
@@ -22,6 +24,7 @@ public class TortueAmelioree extends Tortue {
     
     TortueAmelioree() {
         super();
+        crayon = false;
         copines = new HashSet<>();
         nom = "Tortue" + nb_tortue_cree;
         nb_tortue_cree++;
@@ -29,6 +32,7 @@ public class TortueAmelioree extends Tortue {
     }
     TortueAmelioree(String nom) {
         super();
+        crayon = false;
         copines = new HashSet<>();
         this.nom = nom;
         nb_tortue_cree++;
@@ -52,7 +56,7 @@ public class TortueAmelioree extends Tortue {
     }
 
     public Tortue[] getCopines() {
-        return (Tortue[]) copines.toArray();
+        return (Tortue[]) copines.toArray(new Tortue[0]);
     }
     
     /*public HashSet<Tortue> copinesProche() {
@@ -84,5 +88,7 @@ public class TortueAmelioree extends Tortue {
        dir = ((int) Math.round( Math.atan2( y - this.y, x - this.x) / ratioDegRad));
        super.avancer(dist);
    }
+
+    
     
 }

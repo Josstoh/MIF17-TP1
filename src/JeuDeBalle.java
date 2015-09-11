@@ -1,5 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author p1203723
  */
-public class JeuDeBalle {
+public class JeuDeBalle  extends Observable implements Runnable{
     
     private static final int nb_tortue = 10;
 
@@ -21,14 +24,18 @@ public class JeuDeBalle {
     
     public JeuDeBalle() {
         
+        joueuses = new ArrayList<>();
+        balle = new TortueBalle();
         TortueAmelioree t;
         
         //création des tortues
         // et on leurs donne des positions aléatoires au passage
+        int[] tab = new int[2];
         for(int i = 0; i < nb_tortue; ++i) {
             t = new TortueAmelioree();
+            tab = randomCoord();
             
-            t.setPosition((int) (Math.random()*100) % 100, (int) (Math.random()*100) % 100);
+            t.setPosition(tab[0], tab[1]);
             joueuses.add(t);
         }
         
@@ -57,7 +64,7 @@ public class JeuDeBalle {
         return balle.getPossesseur();
     }
     
-    public int[] randomCoord() {
+    public static int[] randomCoord() {
         int[] tab = new int[2];
         
         tab[0] = ( (int) (Math.random() * 1000) % 300);
@@ -79,11 +86,33 @@ public class JeuDeBalle {
         //la balle est passée a une autre joueuse si elle se trouve a moins de 15 pixels
         //de la possesseuse de balle
         TortueAmelioree closer = (TortueAmelioree) getTortueAvecBalle().getCopines()[0];
-        /*int dist = -1;
+        double dist = getTortueAvecBalle().distanceAvecTortue(closer);
         for(Tortue t : getTortueAvecBalle().getCopines()) {
+            if(getTortueAvecBalle().distanceAvecTortue(t) < dist) 
+                closer = (TortueAmelioree) t;
             
-        }*/
+        }
         
+        //si la distance est sufisamment petite la balle est passée
+        if(dist < 25)
+            balle.setPossesseur(closer);
+        
+            
+        
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JeuDeBalle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            step();
+            setChanged();
+            notifyObservers();
+        }
     }
     
 }

@@ -43,6 +43,7 @@ public class TortueBalle extends Tortue {
 
     public void setPossesseur(TortueAmelioree possesseur) {
         this.possesseur = possesseur;
+        System.out.println("J'ai changé de possesseur, c'est maintenant " + possesseur.getNom() + " qui me possède");
     }
     
    

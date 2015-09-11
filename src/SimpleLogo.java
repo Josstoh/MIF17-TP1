@@ -23,13 +23,15 @@ import java.io.*;
 **************************************************************************/
 
 
-public class SimpleLogo extends JFrame implements ActionListener {
+public class SimpleLogo extends JFrame implements ActionListener,Observer {
 	public static final Dimension VGAP = new Dimension(1,5);
 	public static final Dimension HGAP = new Dimension(5,1);
 
 	private FeuilleDessin feuille;
 	private Tortue courante;
 	private JTextField inputValue;
+        
+        private JeuDeBalle jeu;
 
 	// la procedure principale
 	public static void main(String[] args) {
@@ -43,6 +45,7 @@ public class SimpleLogo extends JFrame implements ActionListener {
 
 	public SimpleLogo() {
 		super("un logo tout simple");
+                jeu = null;
 		logoInit();
 	}
 
@@ -131,6 +134,9 @@ public class SimpleLogo extends JFrame implements ActionListener {
                 JButton b25 = new JButton("Proc6");
 		p2.add(b25);
 		b25.addActionListener(this);
+                JButton b26 = new JButton("Proc7");
+		p2.add(b26);
+		b26.addActionListener(this);
 
 		getContentPane().add(p2,"South");
 
@@ -207,6 +213,8 @@ public class SimpleLogo extends JFrame implements ActionListener {
 			proc5();
                 else if (c.equals("Proc6"))
 			proc6();
+                else if (c.equals("Proc7"))
+			proc7();
 		else if (c.equals("Effacer"))
 			effacer();
 		else if (c.equals("Quitter"))
@@ -266,6 +274,21 @@ public class SimpleLogo extends JFrame implements ActionListener {
            // t1.avancer(40);
             courante = t1;
         }
+        
+        public void proc7() {
+            if(jeu == null) {
+                jeu = new JeuDeBalle();
+                jeu.addObserver(this);
+                for(Tortue t : jeu.getJoueuses()) {
+                    feuille.addTortue(t);
+                }
+                feuille.addTortue(jeu.getBalle());
+                return;
+            }
+            
+            jeu.run();
+            
+        }
 
 	// efface tout et reinitialise la feuille
 	public void effacer() {
@@ -314,4 +337,10 @@ public class SimpleLogo extends JFrame implements ActionListener {
 				menuItem.setAccelerator(KeyStroke.getKeyStroke(key, 0, false));
 		}
 	}
+
+    @Override
+    public void update(Observable o, Object arg) {
+        feuille.repaint();
+        feuille.showTurtles(getGraphics());
+    }
 }
