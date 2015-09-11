@@ -50,14 +50,18 @@ public class TortueAmelioree extends Tortue {
     public double distanceAvecTortue(Tortue t) {
         return sqrt( pow(x - t.x, 2) + pow(y - t.y, 2));
     }
+
+    public Tortue[] getCopines() {
+        return (Tortue[]) copines.toArray();
+    }
     
-    public HashSet<Tortue> copinesProche() {
+    /*public HashSet<Tortue> copinesProche() {
         HashSet<Tortue> copinesProche = new HashSet<Tortue>();
         for(Tortue t : copines) {
             if(distanceAvecTortue(t) <= 15) copinesProche.add(t);
         }
         return copinesProche;
-    }
+    }*/
 
     public String getNom() {
         return nom;
@@ -76,6 +80,9 @@ public class TortueAmelioree extends Tortue {
         }
         
     }
-   
+   public void avancerVers(int x, int y, int dist) {
+       dir = ((int) Math.round( Math.atan2( y - this.y, x - this.x) / ratioDegRad));
+       super.avancer(dist);
+   }
     
 }
