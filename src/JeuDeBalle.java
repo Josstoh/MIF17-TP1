@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,10 +21,12 @@ public class JeuDeBalle  extends Observable implements Runnable{
 
     private ArrayList<TortueAmelioree> joueuses;
     private TortueBalle balle;
+    
+    private Random rGen;
     //private TortueAmelioree tortueAvecBalle;
     
     public JeuDeBalle() {
-        
+        rGen = new Random();
         joueuses = new ArrayList<>();
         balle = new TortueBalle();
         TortueAmelioree t;
@@ -49,6 +52,8 @@ public class JeuDeBalle  extends Observable implements Runnable{
         //on donne la balle a une tortue
         //tortueAvecBalle = joueuses.get(0);
         balle.setPossesseur(joueuses.get(0));
+        
+        
     }
 
     public ArrayList<TortueAmelioree> getJoueuses() {
@@ -64,11 +69,12 @@ public class JeuDeBalle  extends Observable implements Runnable{
         return balle.getPossesseur();
     }
     
-    public static int[] randomCoord() {
+    //genere des coordonées aléatoires entre x:0-600 y:10-400
+    public final int[] randomCoord() {
         int[] tab = new int[2];
         
-        tab[0] = ( (int) (Math.random() * 1000) % 300);
-        tab[1] = ( (int) (Math.random() * 1000) % 300);
+        tab[0] = ( (int) (rGen.nextDouble() * 10000) % 600);
+        tab[1] = 10 + ( (int) (rGen.nextDouble() * 10000) % 390);
         
         return tab;
     }

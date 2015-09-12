@@ -137,6 +137,9 @@ public class SimpleLogo extends JFrame implements ActionListener,Observer {
                 JButton b26 = new JButton("Proc7");
 		p2.add(b26);
 		b26.addActionListener(this);
+                JButton b27 = new JButton("Proc8");
+		p2.add(b27);
+		b27.addActionListener(this);
 
 		getContentPane().add(p2,"South");
 
@@ -215,6 +218,8 @@ public class SimpleLogo extends JFrame implements ActionListener,Observer {
 			proc6();
                 else if (c.equals("Proc7"))
 			proc7();
+                else if (c.equals("Proc8"))
+			proc8();
 		else if (c.equals("Effacer"))
 			effacer();
 		else if (c.equals("Quitter"))
@@ -286,7 +291,26 @@ public class SimpleLogo extends JFrame implements ActionListener,Observer {
                 return;
             }
             
-            jeu.run();
+            new Thread(jeu).start();
+            
+        }
+        
+        //pour des tests
+        
+        public void proc8() {
+            TortueAmelioree t1 = new TortueAmelioree("Franklin");
+            t1.setPosition(0, 10);
+            TortueAmelioree t2 = new TortueAmelioree("Tortue Genial");
+            t2.setPosition(600, 400);
+            TortueAmelioree t3 = new TortueAmelioree("Donatello");
+            t3.setPosition(0, 400);
+            TortueAmelioree t4 = new TortueAmelioree();
+            t4.setPosition(600, 10);
+            
+            feuille.addTortue(t1);
+            feuille.addTortue(t2);
+            feuille.addTortue(t3);
+            feuille.addTortue(t4);
             
         }
 
