@@ -22,11 +22,10 @@ public class JeuDeBalle  extends Observable implements Runnable{
     private ArrayList<TortueAmelioree> joueuses;
     private TortueBalle balle;
     
-    private Random rGen;
+    private static Random rGen = null;
     //private TortueAmelioree tortueAvecBalle;
     
     public JeuDeBalle() {
-        rGen = new Random();
         joueuses = new ArrayList<>();
         balle = new TortueBalle();
         TortueAmelioree t;
@@ -70,7 +69,9 @@ public class JeuDeBalle  extends Observable implements Runnable{
     }
     
     //genere des coordonées aléatoires entre x:0-600 y:10-400
-    public final int[] randomCoord() {
+    public static final int[] randomCoord() {
+        if (rGen == null)
+            rGen = new Random();
         int[] tab = new int[2];
         
         tab[0] = ( (int) (rGen.nextDouble() * 10000) % 600);
@@ -84,7 +85,7 @@ public class JeuDeBalle  extends Observable implements Runnable{
         int[] tab = new int[2];
         for(TortueAmelioree t : joueuses) {
             tab = randomCoord();
-            t.avancerVers(tab[0], tab[1], 10);
+            t.avancerVers(tab[0], tab[1], 3);
         }
         
         
@@ -111,7 +112,7 @@ public class JeuDeBalle  extends Observable implements Runnable{
     public void run() {
         while(true) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(50);
             } catch (InterruptedException ex) {
                 Logger.getLogger(JeuDeBalle.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -16,11 +16,11 @@ import javafx.beans.Observable;
  * @author p1203723
  */
 public class TortueAmelioree extends Tortue{
-    private static int nb_tortue_cree = 0;
+    protected static int nb_tortue_cree = 0;
     
-    private String nom;
+    protected String nom;
     
-    private HashSet<Tortue> copines;
+    protected HashSet<Tortue> copines;
     
     TortueAmelioree() {
         super();
