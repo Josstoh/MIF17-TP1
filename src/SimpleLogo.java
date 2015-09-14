@@ -383,6 +383,6 @@ public class SimpleLogo extends JFrame implements ActionListener,Observer {
     @Override
     public void update(Observable o, Object arg) {
         feuille.repaint();
-        feuille.showTurtles(getGraphics());
+        //feuille.showTurtles(getGraphics());
     }
 }

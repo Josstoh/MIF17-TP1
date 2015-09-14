@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 public class JeuEquipe extends Observable implements Runnable {
 
     private final int nbTortues = 5;
+    private static final int[] bornes = {0,10,600,390};
+    private int[] centreTerrain;
     private EquipeTortue equipe1;
     private EquipeTortue equipe2;
     private TortueBalle balle;
@@ -25,6 +27,11 @@ public class JeuEquipe extends Observable implements Runnable {
     private Random rGen;
 
     public JeuEquipe() {
+        
+        centreTerrain = new int[2];
+        centreTerrain[0] = (bornes[2] - bornes[0]) / 2;
+        centreTerrain[1] = (bornes[3] - bornes[1]) / 2;
+        
         joueuses = new ArrayList<>();
         rGen = new Random();
         balle = new TortueBalle();
@@ -96,32 +103,43 @@ public class JeuEquipe extends Observable implements Runnable {
         //return tortueAvecBalle;
         return (TortueEquipe) balle.getPossesseur();
     }
+    
+    private boolean tortueDansLesBornes(Tortue t) {
+        return !(t.x < bornes[0] || t.y < bornes[1] || t.x > bornes[2] || t.y > bornes[3]);
+    }
 
     @Override
     public void run() {
         int equipe1NbPasses = 0, equipe2NbPasses = 0;
         EquipeTortue equipeDernierePasse = null;
-        int[] tab = new int[2];
-        boolean passe = false;
+        int angle, dist = 10;
+        
 
         while (equipe1NbPasses < 10 && equipe2NbPasses < 10) {
             // on fait avancer toutes les tortues
             for (TortueEquipe t : joueuses) {
-                tab = JeuDeBalle.randomCoord();
-                t.avancerVers(tab[0], tab[1], 3);
+                if(tortueDansLesBornes(t)) {
+                    angle = rGen.nextInt() % 45;
+                    if(rGen.nextBoolean()) 
+                        angle *= -1;
+
+                    t.avancerAngle(angle, dist);
+                } else 
+                    t.avancerVers(centreTerrain[0], centreTerrain[1], dist);
+                
             }
 
             // check passe
             TortueEquipe closer = (TortueEquipe) getTortueAvecBalle().getCopines()[0];
-            double dist = getTortueAvecBalle().distanceAvecTortue(closer);
+            double distance = getTortueAvecBalle().distanceAvecTortue(closer);
             for (Tortue t : getTortueAvecBalle().getCopines()) {
-                if (getTortueAvecBalle().distanceAvecTortue(t) < dist) {
+                if (getTortueAvecBalle().distanceAvecTortue(t) < distance) {
                     closer = (TortueEquipe) t;
 
                 }
 
             }
-            if (dist < 25) {
+            if (distance < 25) {
                 if (getTortueAvecBalle().estAlliee(closer)) {
                     if (equipeDernierePasse == null) {
                         equipeDernierePasse = getTortueAvecBalle().equipe;

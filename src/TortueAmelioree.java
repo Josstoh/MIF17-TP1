@@ -88,6 +88,12 @@ public class TortueAmelioree extends Tortue{
        dir = ((int) Math.round( Math.atan2( y - this.y, x - this.x) / ratioDegRad));
        super.avancer(dist);
    }
+   
+   public void avancerAngle(int angle, int dist) {
+       dir += angle;
+       dir %= 360;
+       super.avancer(dist);
+   }
 
     
     
