@@ -34,7 +34,7 @@ public class TortueBalle extends Tortue {
             y = possesseur.y;
         }
         graph.setColor(Color.red);
-        graph.fillOval(x-tailleCercleTortue, y+tailleCercleTortue, tailleCercleTortue, tailleCercleTortue);
+        graph.fillOval(x, y, tailleCercleTortue, tailleCercleTortue);
     }
 
     public TortueAmelioree getPossesseur() {
@@ -43,6 +43,8 @@ public class TortueBalle extends Tortue {
 
     public void setPossesseur(TortueAmelioree possesseur) {
         this.possesseur = possesseur;
+        x = possesseur.x;
+        y = possesseur.y;
         System.out.println("J'ai changé de possesseur, c'est maintenant " + possesseur.getNom() + " qui me possède");
     }
     

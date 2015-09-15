@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class JeuEquipe extends Observable implements Runnable {
 
     private final int nbTortues = 5;
-    private static final int[] bornes = {0,10,600,390};
+    private static final int[] bornes = {0, 10, 600, 390};
     private int[] centreTerrain;
     private EquipeTortue equipe1;
     private EquipeTortue equipe2;
@@ -27,11 +27,11 @@ public class JeuEquipe extends Observable implements Runnable {
     private Random rGen;
 
     public JeuEquipe() {
-        
+
         centreTerrain = new int[2];
         centreTerrain[0] = (bornes[2] - bornes[0]) / 2;
         centreTerrain[1] = (bornes[3] - bornes[1]) / 2;
-        
+
         joueuses = new ArrayList<>();
         rGen = new Random();
         balle = new TortueBalle();
@@ -103,7 +103,7 @@ public class JeuEquipe extends Observable implements Runnable {
         //return tortueAvecBalle;
         return (TortueEquipe) balle.getPossesseur();
     }
-    
+
     private boolean tortueDansLesBornes(Tortue t) {
         return !(t.x < bornes[0] || t.y < bornes[1] || t.x > bornes[2] || t.y > bornes[3]);
     }
@@ -113,70 +113,83 @@ public class JeuEquipe extends Observable implements Runnable {
         int equipe1NbPasses = 0, equipe2NbPasses = 0;
         EquipeTortue equipeDernierePasse = null;
         int angle, dist = 10;
-        
+        TortueEquipe closest;
+        TortueEquipe last = null;
+        double distance;
+        boolean fairePasse = false;
 
         while (equipe1NbPasses < 10 && equipe2NbPasses < 10) {
             // on fait avancer toutes les tortues
             for (TortueEquipe t : joueuses) {
-                if(tortueDansLesBornes(t)) {
+                if (tortueDansLesBornes(t)) {
                     angle = rGen.nextInt() % 45;
-                    if(rGen.nextBoolean()) 
+                    if (rGen.nextBoolean()) {
                         angle *= -1;
+                    }
 
                     t.avancerAngle(angle, dist);
-                } else 
+                } else {
                     t.avancerVers(centreTerrain[0], centreTerrain[1], dist);
-                
-            }
-
-            // check passe
-            TortueEquipe closer = (TortueEquipe) getTortueAvecBalle().getCopines()[0];
-            double distance = getTortueAvecBalle().distanceAvecTortue(closer);
-            for (Tortue t : getTortueAvecBalle().getCopines()) {
-                if (getTortueAvecBalle().distanceAvecTortue(t) < distance) {
-                    closer = (TortueEquipe) t;
-
                 }
 
             }
+
+            // check passe
+            closest = (TortueEquipe) getTortueAvecBalle().getCopines()[0];
+            distance = getTortueAvecBalle().distanceAvecTortue(closest);
+            for (Tortue t : getTortueAvecBalle().getCopines()) {
+                if (getTortueAvecBalle().distanceAvecTortue(t) < distance) {
+                    closest = (TortueEquipe) t;
+                    distance = getTortueAvecBalle().distanceAvecTortue(t);
+                }
+
+            }
+
             if (distance < 25) {
-                if (getTortueAvecBalle().estAlliee(closer)) {
-                    if (equipeDernierePasse == null) {
-                        equipeDernierePasse = getTortueAvecBalle().equipe;
-                        if (equipeDernierePasse == equipe1) {
-                            equipe1NbPasses++;
-                            System.out.println("Passe de l'équipe 1 !");
-                        } else {
-                            equipe2NbPasses++;
-                            System.out.println("Passe de l'équipe 2 !");
-                        }
-
+                if (getTortueAvecBalle().estAlliee(closest)) {
+                    if (closest == last) {
+                        fairePasse = false;
                     } else {
-                        if (getTortueAvecBalle().equipe == equipeDernierePasse) {
+                        fairePasse = true;
 
+                        if (equipeDernierePasse == null) {
+
+                            equipeDernierePasse = getTortueAvecBalle().equipe;
                             if (equipeDernierePasse == equipe1) {
                                 equipe1NbPasses++;
-                                System.out.println("Une Passe en plus pour l'équipe 1 : " + equipe1NbPasses + " !");
+                                System.out.println("Passe de l'équipe 1 !");
                             } else {
                                 equipe2NbPasses++;
-                                System.out.println("Une Passe en plus pour l'équipe 2 : " + equipe2NbPasses + " !");
+                                System.out.println("Passe de l'équipe 2 !");
                             }
 
-                        }
-                        else 
-                        {
-                            equipeDernierePasse = getTortueAvecBalle().equipe;
-                           if (equipeDernierePasse == equipe1) {
-                                equipe1NbPasses++;
-                                System.out.println("Une Passe en plus pour l'équipe 1 : " + equipe1NbPasses + " !");
+                        } else {
+                            if (getTortueAvecBalle().equipe == equipeDernierePasse) {
+
+                                if (equipeDernierePasse == equipe1) {
+                                    equipe1NbPasses++;
+                                    System.out.println("Une Passe en plus pour l'équipe 1 : " + equipe1NbPasses + " !");
+                                } else {
+                                    equipe2NbPasses++;
+                                    System.out.println("Une Passe en plus pour l'équipe 2 : " + equipe2NbPasses + " !");
+                                }
+
                             } else {
-                                equipe2NbPasses++;
-                                System.out.println("Une Passe en plus pour l'équipe 2 : " + equipe2NbPasses + " !");
-                            } 
+                                equipeDernierePasse = getTortueAvecBalle().equipe;
+                                if (equipeDernierePasse == equipe1) {
+                                    equipe1NbPasses++;
+                                    System.out.println("Une Passe en plus pour l'équipe 1 : " + equipe1NbPasses + " !");
+                                } else {
+                                    equipe2NbPasses++;
+                                    System.out.println("Une Passe en plus pour l'équipe 2 : " + equipe2NbPasses + " !");
+                                }
+                            }
                         }
                     }
                 } else {
-                    if (closer.equipe == equipe1) {
+                    last = null;
+                    fairePasse = true;
+                    if (closest.equipe == equipe1) {
                         equipe2NbPasses = 0;
                         System.out.println("Ooh, l'équipe 2 a perdu la balle !");
                     } else {
@@ -184,10 +197,12 @@ public class JeuEquipe extends Observable implements Runnable {
                         System.out.println("Ooh, l'équipe 1 a perdu la balle !");
                     }
                 }
-                balle.setPossesseur(closer);
+                if (fairePasse) {
+                    balle.setPossesseur(closest);
+                    last = closest;
+                }
             }
 
-            
             setChanged();
             notifyObservers();
             try {
